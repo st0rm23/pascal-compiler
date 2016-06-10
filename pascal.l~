@@ -27,7 +27,7 @@ FUNCTION [Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]
 GE ">="
 GOTO [Gg][Oo][Tt][Oo]
 GT ">"
-ID [a-zA-Z]([a-zA-Z0-9])*
+ID [a-zA-Z]([a-zA-Z0-9])+
 IF [Ii][Ff]
 INTEGER [0-9]+
 LB "["

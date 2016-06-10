@@ -306,6 +306,7 @@ name_list : name_list COMMA ID {
 			appendChild($$, $3);
           }
           | ID {
+			printf("sb\n");
 			$$ = newTreeNode(name_list);
 		 	appendChild($$, $1);		
 		  }

@@ -5,7 +5,7 @@ int yyparse();
 extern int totalLine;
 extern TreeNode * root;
 extern int hasError;
-int traceflag = 0;
+int traceflag = 1;
 
 
 void printTree(TreeNode* t, int depth){

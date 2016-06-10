@@ -1,5 +1,8 @@
 #include "util.h"
 
+
+int traceflag = 0;
+
 TreeNode *newTreeNode(NodeKind kind){
 	TreeNode* t = (TreeNode *) malloc(sizeof(TreeNode));
 	t->child = NULL;
