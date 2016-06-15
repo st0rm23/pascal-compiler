@@ -4,6 +4,7 @@ var
 	c : integer;
 	A : integer;
 begin
+	(*123123123*)
     writeln('hello');
 	A := b + 3 < 5 + 'a' * (a - 2); 
 	writeln(A);

@@ -127,7 +127,7 @@ WHILE [Ww][Hh][Ii][Ll][Ee]
 	while (1){
 		char ch = input();
 		if (ch == EOF) commentEOF();
-		if (yytext[0] == '(' && ch == '*') flag = 1;
+		if (yytext[0] == '(' && ch == '*') {flag = 1; continue;}
 		if (yytext[0] == '(' && ch == ')' && flag == 1) break;
 		flag = 0;
 		if (yytext[0] == '{' && ch == '}') break;
