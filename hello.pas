@@ -13,4 +13,5 @@ begin
 		c := 1;
 	end;
 	writeln(c);
+	abc;
 end.
