@@ -6,6 +6,7 @@ TreeNode *newTreeNode(NodeKind kind){
 	t->sibling = NULL;
 	t->nodekind = kind;
 	t->tokenString = NULL;
+	t->nChild = 0;
 	if (traceflag) printTreeNode(t);
 	
 	return t;
@@ -16,6 +17,7 @@ TreeNode *newTokenTreeNode(NodeKind kind, char* tokenString){
 	t->child = NULL;
 	t->sibling = NULL;
 	t->nodekind = kind;
+	t->nChild = 0;
 	int len = strlen(tokenString);
 	t->tokenString = (char *)malloc(len + 1);
 	strcpy(t->tokenString, tokenString);
@@ -32,6 +34,7 @@ void appendChild(TreeNode *t, TreeNode *child){
 		while (p->sibling != NULL) p = p->sibling;
 		p->sibling = child;		
 	}
+	t->nChild++;
 }
 
 void printTreeNode(TreeNode* treeNode){

@@ -634,7 +634,7 @@ typedef struct {
 } YYSTACKDATA;
 /* variables for the parser stack */
 static YYSTACKDATA yystack;
-#line 1003 "pascal.y"
+#line 1000 "pascal.y"
 int yyerror(char *a){
 	hasError = 1;
 	return 0;
@@ -1918,42 +1918,39 @@ case 117:
 	{
 					yyval = newTreeNode(N_EXP_DIV);
 					appendChild(yyval, yystack.l_mark[-2]);
-					appendChild(yyval, yystack.l_mark[-1]);
 					appendChild(yyval, yystack.l_mark[0]);
 	 }
 break;
 case 118:
-#line 894 "pascal.y"
+#line 893 "pascal.y"
 	{
 					yyval = newTreeNode(N_EXP_MOD);
 					appendChild(yyval, yystack.l_mark[-2]);
-					appendChild(yyval, yystack.l_mark[-1]);
 					appendChild(yyval, yystack.l_mark[0]);
 	 }
 break;
 case 119:
-#line 900 "pascal.y"
+#line 898 "pascal.y"
 	{
 					yyval = newTreeNode(N_EXP_AND);
 					appendChild(yyval, yystack.l_mark[-2]);
-					appendChild(yyval, yystack.l_mark[-1]);
 					appendChild(yyval, yystack.l_mark[0]);
 	 }
 break;
 case 120:
-#line 906 "pascal.y"
+#line 903 "pascal.y"
 	{
 					yyval = yystack.l_mark[0];
 	 }
 break;
 case 121:
-#line 911 "pascal.y"
+#line 908 "pascal.y"
 	{
 					yyval = yystack.l_mark[0];
 	   }
 break;
 case 122:
-#line 914 "pascal.y"
+#line 911 "pascal.y"
 	{
 					yyval = newTreeNode(N_FACTOR);
 					appendChild(yyval, yystack.l_mark[-3]);
@@ -1965,7 +1962,7 @@ case 122:
 	   }
 break;
 case 123:
-#line 923 "pascal.y"
+#line 920 "pascal.y"
 	{
 					yyval = newTreeNode(N_FACTOR);
 					appendChild(yyval, yystack.l_mark[0]);
@@ -1976,7 +1973,7 @@ case 123:
        }
 break;
 case 124:
-#line 931 "pascal.y"
+#line 928 "pascal.y"
 	{
 					yyval = newTreeNode(N_FACTOR);
 					appendChild(yyval, yystack.l_mark[-3]);
@@ -1988,19 +1985,19 @@ case 124:
 	   }
 break;
 case 125:
-#line 940 "pascal.y"
+#line 937 "pascal.y"
 	{
 					yyval = yystack.l_mark[0];
 	   }
 break;
 case 126:
-#line 943 "pascal.y"
+#line 940 "pascal.y"
 	{
 					yyval = yystack.l_mark[-1];
 	   }
 break;
 case 127:
-#line 946 "pascal.y"
+#line 943 "pascal.y"
 	{
 					yyval = newTreeNode(N_FACTOR);
 					appendChild(yyval, yystack.l_mark[-1]);
@@ -2012,7 +2009,7 @@ case 127:
 	   }
 break;
 case 128:
-#line 955 "pascal.y"
+#line 952 "pascal.y"
 	{
 					yyval = newTreeNode(N_FACTOR);
 					appendChild(yyval, yystack.l_mark[-1]);
@@ -2024,7 +2021,7 @@ case 128:
 	   }
 break;
 case 129:
-#line 964 "pascal.y"
+#line 961 "pascal.y"
 	{
 					yyval = newTreeNode(N_FACTOR);
 					appendChild(yyval, yystack.l_mark[-3]);
@@ -2039,7 +2036,7 @@ case 129:
 	   }
 break;
 case 130:
-#line 976 "pascal.y"
+#line 973 "pascal.y"
 	{
 					yyval = newTreeNode(N_FACTOR);
 					appendChild(yyval, yystack.l_mark[-2]);
@@ -2051,7 +2048,7 @@ case 130:
 	   }
 break;
 case 131:
-#line 987 "pascal.y"
+#line 984 "pascal.y"
 	{
 					yyval = yystack.l_mark[-2];
 					yyval = newTreeNode(N_ARGS_LIST);
@@ -2061,7 +2058,7 @@ case 131:
 		  }
 break;
 case 132:
-#line 994 "pascal.y"
+#line 991 "pascal.y"
 	{
 					yyval = newTreeNode(N_ARGS_LIST);
 					TreeNode* exp = newTreeNode(N_EXPRESSION);
@@ -2069,7 +2066,7 @@ case 132:
 					appendChild(yyval, exp);
 		  }
 break;
-#line 2071 "y.tab.c"
+#line 2068 "y.tab.c"
     }
     yystack.s_mark -= yym;
     yystate = *yystack.s_mark;

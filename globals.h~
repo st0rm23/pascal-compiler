@@ -4,7 +4,6 @@
 #include <string.h>
 #include <stdio.h>
 typedef enum{
-N_PROGRAM,
 N_ROUTINE,
 N_ROUTINE_HEAD,
 N_STMT_LIST,
