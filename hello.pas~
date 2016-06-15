@@ -11,4 +11,5 @@ begin
 	begin
 		c := 1;
 	end;
+	writeln(c);
 end.

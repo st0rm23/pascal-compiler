@@ -909,12 +909,7 @@ term : term MUL factor {
      ;
 
 factor : ID {
-					$$ = newTreeNode(N_FACTOR);
-					appendChild($$, $1);
-			/*      N_FACTOR
-			 *		   |
-			 * 	     N_ID        					
-			 */
+					$$ = $1;
 	   }
        | ID LP args_list RP {
 					$$ = newTreeNode(N_FACTOR);
@@ -943,22 +938,10 @@ factor : ID {
 			 */
 	   }
        | const_value {
-					$$ = newTreeNode(N_FACTOR);
-					appendChild($$, $1);
-			/*      		N_FACTOR
-			 *					|	
-			 * 	   		(N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)				
-			 */
+					$$ = $1;
 	   }
        | LP expression RP {
-					$$ = newTreeNode(N_FACTOR);
-					TreeNode* exp = newTreeNode(N_EXPRESSION);
-					appendChild(exp, $2);
-					appendChild($$, exp);
-			/*      N_FACTOR
-			 *			|
-			 * 	   	N_EXPRESSION			
-			 */
+					$$ = $2;
 	   }
        | NOT factor {
 					$$ = newTreeNode(N_FACTOR);
