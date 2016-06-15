@@ -27,7 +27,7 @@ FUNCTION [Ff][Uu][Nn][Cc][Tt][Ii][Oo][Nn]
 GE ">="
 GOTO [Gg][Oo][Tt][Oo]
 GT ">"
-ID [a-zA-Z]([a-zA-Z0-9])+
+ID [a-zA-Z]([a-zA-Z0-9])*
 IF [Ii][Ff]
 INTEGER [0-9]+
 LB "["
@@ -69,7 +69,7 @@ WHILE [Ww][Hh][Ii][Ll][Ee]
 {ASSIGN} {yylval = newTokenTreeNode(TOKEN_ASSIGN, yytext);return (ASSIGN);}
 {BEGINN} {yylval = newTokenTreeNode(TOKEN_BEGIN, yytext);return (BEGINN);}
 {CASE} {yylval = newTokenTreeNode(TOKEN_CASE, yytext);return (CASE);}
-{CHAR} {yylval = newTokenTreeNode(TOKEN_CHAR, yytext);return (CHAR);}
+{CHAR} {yylval = newTokenTreeNode(N_CHAR, yytext);return (CHAR);}
 {COLON} {yylval = newTokenTreeNode(TOKEN_COLON, yytext);return (COLON);}
 {COMMA} {yylval = newTokenTreeNode(TOKEN_COMMA, yytext);return (COMMA);}
 {CONST} {yylval = newTokenTreeNode(TOKEN_CONST, yytext);return (CONST);}
@@ -87,7 +87,7 @@ WHILE [Ww][Hh][Ii][Ll][Ee]
 {GOTO} {yylval = newTokenTreeNode(TOKEN_GOTO, yytext);return (GOTO);}
 {GT} {yylval = newTokenTreeNode(TOKEN_GT, yytext);return (GT);}
 {IF} {yylval = newTokenTreeNode(TOKEN_IF, yytext);return (IF);}
-{INTEGER} {yylval = newTokenTreeNode(TOKEN_INTEGER, yytext);return (INTEGER);}
+{INTEGER} {yylval = newTokenTreeNode(N_INTEGER, yytext);return (INTEGER);}
 {LB} {yylval = newTokenTreeNode(TOKEN_LB, yytext);return (LB);}
 {LE} {yylval = newTokenTreeNode(TOKEN_LE, yytext);return (LE);}
 {LP} {yylval = newTokenTreeNode(TOKEN_LP, yytext);return (LP);}
@@ -103,13 +103,13 @@ WHILE [Ww][Hh][Ii][Ll][Ee]
 {PROGRAM} {yylval = newTokenTreeNode(TOKEN_PROGRAM, yytext);return (PROGRAM);}
 {RB} {yylval = newTokenTreeNode(TOKEN_RB, yytext);return (RB);}
 {READ} {yylval = newTokenTreeNode(TOKEN_READ, yytext);return (READ);}
-{REAL} {yylval = newTokenTreeNode(TOKEN_REAL, yytext);return (REAL);}
+{REAL} {yylval = newTokenTreeNode(N_REAL, yytext);return (REAL);}
 {RECORD} {yylval = newTokenTreeNode(TOKEN_RECORD, yytext);return (RECORD);}
 {REPEAT} {yylval = newTokenTreeNode(TOKEN_REPEAT, yytext);return (REPEAT);}
 {RP} {yylval = newTokenTreeNode(TOKEN_RP, yytext);return (RP);}
 {SEMI} {yylval = newTokenTreeNode(TOKEN_SEMI, yytext);return (SEMI);}
-{STRING} {yylval = newTokenTreeNode(TOKEN_STRING, yytext);return (STRING);}
-{SYS_CON} {yylval = newTokenTreeNode(TOKEN_SYS_CON, yytext);return (SYS_CON);}
+{STRING} {yylval = newTokenTreeNode(N_STRING, yytext);return (STRING);}
+{SYS_CON} {yylval = newTokenTreeNode(N_SYS_CON, yytext);return (SYS_CON);}
 {SYS_FUNCT} {yylval = newTokenTreeNode(TOKEN_SYS_FUNCT, yytext);return (SYS_FUNCT);}
 {SYS_PROC} {yylval = newTokenTreeNode(TOKEN_SYS_PROC, yytext);return (SYS_PROC);}
 {SYS_TYPE} {yylval = newTokenTreeNode(TOKEN_SYS_TYPE, yytext);return (SYS_TYPE);}
@@ -120,7 +120,7 @@ WHILE [Ww][Hh][Ii][Ll][Ee]
 {UNTIL} {yylval = newTokenTreeNode(TOKEN_UNTIL, yytext);return (UNTIL);}
 {VAR} {yylval = newTokenTreeNode(TOKEN_VAR, yytext);return (VAR);}
 {WHILE} {yylval = newTokenTreeNode(TOKEN_WHILE, yytext);return (WHILE);}
-{ID} {yylval = newTokenTreeNode(TOKEN_ID, yytext);return (ID);}
+{ID} {yylval = newTokenTreeNode(N_ID, yytext);return (ID);}
 
 "(*"|"{" {
 	int flag = 0;

@@ -6,6 +6,7 @@ extern int totalLine;
 extern TreeNode * root;
 extern int hasError;
 int traceflag = 0;
+int printflag = 0;
 
 
 void printTree(TreeNode* t, int depth){
@@ -30,12 +31,17 @@ void printTree(TreeNode* t, int depth){
 	}
 }
 
+void analysisArg(int argc, char* argv[]){
+	int i;
+	for (i=0; i<argc; i++) {
+		if (strcmp(argv[i], "-d") == 0) printflag = 1;
+		if (strcmp(argv[i], "-t") == 0) traceflag = 1;
+	}
+}
+
 int main(int argc, char* argv[]){
-	int i = 0;	
+	analysisArg(argc, argv);
 	yyparse();
-	for (i=0; i<argc; i++)
-		if (strcmp(argv[i], "-d") == 0)
-			if (!hasError) printTree(root, 0);
-	
-	if (hasError) printf("the compiler meets some error, aborted!\n");
+	if (printflag && !hasError && root != NULL) printTree(root, 0);
+	if (hasError) printf("\nthe compiler meets some error, aborted!\n\n");
 }

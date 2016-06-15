@@ -72,798 +72,958 @@
 %%
 
 program : program_head routine DOT {
-			$$ = newTreeNode(program);
-			appendChild($$, $1);
-			appendChild($$, $2);			
-			appendChild($$, $3);
+			$$ = newTreeNode(N_PROGRAM);
+			appendChild($$, $1); 
+			appendChild($$, $2); 
+
+			/*          N_PROGRAM	
+			 *			/		\
+			 *			N_ID  	N_ROUTINE					
+			 */
 
 			if (!hasError) hasError = 0;
 			root = $$;
 			totalLine = lineno;
 		}
 		| program_head routine error{
-			yyerror("missing the <DOT> of the end of program");
-		}        
-		;
+			printError("missing the <DOT> of the end of program");
+		} 
+		| error {
+			printError("syntax error");		
+		};
 
 program_head : PROGRAM ID SEMI {
-				$$ = newTreeNode(program_head);
-				appendChild($$, $1);
-				appendChild($$, $2);			
-				appendChild($$, $3);
+				$$ = $2;
 				}
           	 | PROGRAM error SEMI{
-			 	yyerror("<RPOGRAM NAME>");
+			 	printError("missing <RPOGRAM NAME>");
 			 }
-			 ;
+			 | PROGRAM ID error{
+			 	printError("missing <SEMI>");
+			 };
 
 routine : routine_head routine_body {
-			$$ = newTreeNode(routine);
+			$$ = newTreeNode(N_ROUTINE);
 			appendChild($$, $1);
 			appendChild($$, $2);
+			/*          	N_ROUTINE	
+			 *			/				\
+			 *			N_ROUTINE_HEAD  	N_STMT_LIST					
+			 */
+
 		}
         ;
 
 sub_routine : routine_head routine_body {
-				$$ = newTreeNode(sub_routine);
+				$$ = newTreeNode(N_ROUTINE);
 				appendChild($$, $1);
 				appendChild($$, $2);		
+			/*          	N_ROUTINE	  //the same as N_ROUTINE
+			 *			/				\
+			 *			N_ROUTINE_HEAD  	N_STMT_LIST					
+			 */
+
 			}
             ;
 
 routine_head : label_part const_part type_part var_part routine_part {
-				 $$ = newTreeNode(routine_head);
+				 $$ = newTreeNode(N_ROUTINE_HEAD);
 				 appendChild($$, $1);
 				 appendChild($$, $2);			
 				 appendChild($$, $3);			
 				 appendChild($$, $4);			
 				 appendChild($$, $5);
+
+				/*          								N_ROUTINE_HEAD	  
+				 *			/				|				|	        |                 |           	\
+				 *			N_LABEL_PART   N_CONST_PART  N_TYPE_PART  N_VAR_PART  N_ROUTINE_PART N_ROUTINE_PART					
+				 */
 			 }
              ;
 
 label_part : {
-		   		$$ = newTreeNode(label_part);
+		   		$$ = newTreeNode(N_LABEL_PART);
            }
            ;
 
 const_part : CONST const_expr_list {
-			   $$ = newTreeNode(const_part);
-			   appendChild($$, $1);
+			   $$ = $2;
 		   } 
 		   | {
-           		$$ = newTreeNode(const_part);
+           		$$ = newTreeNode(N_CONST_PART);  //an N_CONST_PART with empty child
 		   }
 		   ;
 
-const_expr_list : const_expr_list ID EQUAL const_value SEMI {
-					 $$ = newTreeNode(const_expr_list);
-					 appendChild($$, $1);
-					 appendChild($$, $2);			
-					 appendChild($$, $3);			
-					 appendChild($$, $4);			
-					 appendChild($$, $5);
+const_expr_list : const_expr_list ID EQUAL const_value SEMI { 
+					 $$ = $1;  					//eliminate left recursion
+					 TreeNode* exp = newTreeNode(N_CONST_PART_EXP);
+					 appendChild(exp, $2);
+					 appendChild(exp, $4);
+					 appendChild($$, exp);
+				/*          					    N_CONST_PART	  
+				 *			/				      |				   |           	\
+				 *			N_CONST_PART_EXP   N_CONST_PART_EXP  ......  N_CONST_PART_EXP					
+				 */
 				}
                 | ID EQUAL const_value SEMI {
-					 $$ = newTreeNode(const_expr_list);
-					 appendChild($$, $1);
-					 appendChild($$, $2);			
-					 appendChild($$, $3);			
-					 appendChild($$, $4);
+					 $$ = newTreeNode(N_CONST_PART); 
+					 TreeNode* exp = newTreeNode(N_CONST_PART_EXP);
+					 appendChild(exp, $1);
+					 appendChild(exp, $3);
+					 appendChild($$, exp);
+
+				/*          				N_CONST_PART_EXP	  
+				 *							/	     	\
+				 *			               N_ID       (N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)					
+				 */
 				}
                 ;
 
 const_value : INTEGER {
-				 $$ = newTreeNode(const_value);
-				 appendChild($$, $1);
+				 $$ = $1;
 			}
             | REAL {
-				$$ = newTreeNode(const_value);
-				appendChild($$, $1);
+				$$ = $1;
 			}
             | CHAR {
-				 $$ = newTreeNode(const_value);
-				 appendChild($$, $1);
+				 $$ = $1;
 			} 
             | STRING {
-				 $$ = newTreeNode(const_value);
-				 appendChild($$, $1);
+				 $$ = $1;
 			} 
             | SYS_CON {
-				 $$ = newTreeNode(const_value);
-				 appendChild($$, $1);
+				 $$ = $1;
 			}
             ;
 
 type_part : TYPE type_decl_list {
-				 $$ = newTreeNode(type_part);
-				 appendChild($$, $1);	
-				 appendChild($$, $2);			
+				 $$ = $2;			
 		  }
           | {	 
-				 $$ = newTreeNode(type_part);	
+				 $$ = newTreeNode(N_TYPE_PART);	 //an N_TYPE_PART with empty child
 		  }
 		  ;
 
 type_decl_list : type_decl_list type_definition {
-	 		     $$ = newTreeNode(type_decl_list);
-				 appendChild($$, $1);	
-				 appendChild($$, $2);			
+	 		     	$$ = $1;   //eliminate left recursion
+				 	appendChild($$, $2);			
 		  	   }
                | type_definition {
-	 		     $$ = newTreeNode(type_decl_list);
-				 appendChild($$, $1);			
+					 $$ = newTreeNode(N_TYPE_PART);
+					 appendChild($$, $1);
+
+				/*          					    N_TYPE_PART	  
+				 *			/				      |				   |           	\
+				 *			N_TYPE_DEFINITION   N_TYPE_DEFINITION  ......  N_TYPE_DEFINITION					
+				 */		
 				}
                ;
  
 type_definition : ID EQUAL type_decl SEMI {
-	 			 $$ = newTreeNode(type_definition);
+	 			 $$ = newTreeNode(N_TYPE_DEFINITION);
 				 appendChild($$, $1);	
-				 appendChild($$, $2);	
-				 appendChild($$, $3);	
-				 appendChild($$, $4);			
+				 appendChild($$, $3);
+				/*          				N_TYPE_DEFINITION	  
+				 *							/	     	\
+				 *			               N_ID      (N_SIMPLE_TYPE_DECL|N_ARRAY_TYPE_DECL|N_RECORD_TYPE_DECL)					
+				 */		
 		        }
                 ;
 
 type_decl : simple_type_decl {
-	 			$$ = newTreeNode(type_decl);
-			 	appendChild($$, $1);	
+	 			$$ = $1;	
 		  }
           | array_type_decl {
-				 $$ = newTreeNode(type_decl);
-				 appendChild($$, $1);				
+				 $$ = $1;				
 		  }
           | record_type_decl {
-				 $$ = newTreeNode(type_decl);
-				 appendChild($$, $1);	
+				 $$ = $1;	
 		  }
 		  ;
 
 simple_type_decl : SYS_TYPE {
-				 	$$ = newTreeNode(simple_type_decl);
+				 	$$ = newTreeNode(N_SIMPLE_TYPE_DECL);
 				 	appendChild($$, $1);
+				/*          N_SIMPLE_TYPE_DECL	  
+				 *					|	     	
+				 *			    N_SYS_TYPE   					
+				 */	
 				 }
                  | ID {
-					$$ = newTreeNode(simple_type_decl);
+					$$ = newTreeNode(N_SIMPLE_TYPE_DECL);
 				 	appendChild($$, $1);					
+				/*          N_SIMPLE_TYPE_DECL	  
+				 *					|	     	
+				 *			       N_ID   					
+				 */	
 				 }
                  | LP name_list RP {
-					$$ = newTreeNode(simple_type_decl);
-				 	appendChild($$, $1);	
+					$$ = newTreeNode(N_SIMPLE_TYPE_DECL);
 					appendChild($$, $2);
-					appendChild($$, $3);
+				/*          N_SIMPLE_TYPE_DECL	  
+				 *					|	     	
+				 *			    N_NAME_LIST   					
+				 */	
 				 }
                  | const_value DOTDOT const_value {
-					$$ = newTreeNode(simple_type_decl);
+					$$ = newTreeNode(N_SIMPLE_TYPE_DECL);
 				 	appendChild($$, $1);	
-					appendChild($$, $2);
-					appendChild($$, $3);				
+					appendChild($$, $3);		
+				/*          								N_SIMPLE_TYPE_DECL	  
+				 *			                                  /	     	 \
+				 *	    (N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)  	(N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)				
+				 */			
 				 }  
                  | MINUS const_value DOTDOT const_value {
-					$$ = newTreeNode(simple_type_decl);
-				 	appendChild($$, $1);	
-					appendChild($$, $2);
-					appendChild($$, $3);	
-					appendChild($$, $4);					
-				 }
-                 | MINUS const_value DOTDOT MINUS const_value {
-                   	$$ = newTreeNode(simple_type_decl);
-				 	appendChild($$, $1);	
-					appendChild($$, $2);
-					appendChild($$, $3);	
-					appendChild($$, $4);	
-					appendChild($$, $5);			
-				 }
-                 | ID DOTDOT ID {
-				  	$$ = newTreeNode(simple_type_decl);
+					$$ = newTreeNode(N_SIMPLE_TYPE_DECL);
 				 	appendChild($$, $1);	
 					appendChild($$, $2);	
-					appendChild($$, $3);					
+					appendChild($$, $4);	
+				/*          									N_SIMPLE_TYPE_DECL	  
+				 *		/	    		                              |	     	 \
+				 *	N_MINUS    (N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)  	(N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)				
+				 */				
+				 }
+                 | MINUS const_value DOTDOT MINUS const_value {
+                   	$$ = newTreeNode(N_SIMPLE_TYPE_DECL);
+				 	appendChild($$, $1);	
+					appendChild($$, $2);
+					appendChild($$, $4);	
+					appendChild($$, $5);		
+
+				/*          									N_SIMPLE_TYPE_DECL	  
+				 *		/	    		                              |	     	|			 \
+				 *	N_MINUS    (N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)  	N_MINUS		(N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)				
+				 */			
+				 }
+                 | ID DOTDOT ID {
+				  	$$ = newTreeNode(N_SIMPLE_TYPE_DECL);
+				 	appendChild($$, $1);	
+					appendChild($$, $3);
+				/*     N_SIMPLE_TYPE_DECL	  
+				 *		/    	 \
+				 *	  N_ID   	N_ID		
+				 */						
 				 };
 
 array_type_decl : ARRAY LB simple_type_decl RB OF type_decl {
-					$$ = newTreeNode(array_type_decl);
-				 	appendChild($$, $1);	
-					appendChild($$, $2);	
-					appendChild($$, $3);		
-					appendChild($$, $4);	
-					appendChild($$, $5);		
-					appendChild($$, $6);					
+					$$ = newTreeNode(N_ARRAY_TYPE_DECL);
+				 	appendChild($$, $3);		
+					appendChild($$, $6);
+				/*    		N_ARRAY_TYPE_DECL	  
+				 *		/    	 				\
+				 *	  N_SIMPLE_TYPE_DECL   		(N_SIMPLE_TYPE_DECL|N_ARRAY_TYPE_DECL|N_RECORD_TYPE_DECL)		
+				 */						
 				}
 				;
 
 record_type_decl : RECORD field_decl_list END {
-				 	$$ = newTreeNode(record_type_decl);
-				 	appendChild($$, $1);	
-					appendChild($$, $2);	
-					appendChild($$, $3);		
+				 	$$ = $2;		
 				 }
                  ;
 
 field_decl_list : field_decl_list field_decl {
-					$$ = newTreeNode(field_decl_list);
-				 	appendChild($$, $1);	
+					$$ = $1;	
 					appendChild($$, $2);					
 				}
                 | field_decl {
-					$$ = newTreeNode(field_decl_list);
+					$$ = newTreeNode(N_RECORD_TYPE_DECL);
 				 	appendChild($$, $1);	
+				/*          					 N_RECORD_TYPE_DECL	  
+				 *			/				      |				   |           	\
+				 *			N_FIELD_DECL   N_FIELD_DECL        ......  N_FIELD_DECL					
+				 */	
 				}
                 ;
 
 field_decl : name_list COLON type_decl SEMI {
-	 			$$ = newTreeNode(field_decl);
+	 			$$ = newTreeNode(N_FIELD_DECL);
 			 	appendChild($$, $1);	
-				appendChild($$, $2);	
-				appendChild($$, $3);		
-				appendChild($$, $4);	
+				appendChild($$, $3);	
+				/*          	N_FILED_DECL  
+				 *			/				\
+				 *			N_NAME_LIST   (N_SIMPLE_TYPE_DECL|N_ARRAY_TYPE_DECL|N_RECORD_TYPE_DECL)					
+				 */	
 		   }
            ;
 
 name_list : name_list COMMA ID {
-			$$ = newTreeNode(name_list);
-		 	appendChild($$, $1);	
-			appendChild($$, $2);	
-			appendChild($$, $3);
+			$$ = $1;	
+			appendChild($$, $3); 
+			/*          	N_NAME_LIST	  
+			 *			/		 |	   |   	\
+			 *			N_ID   N_ID  ......  N_ID					
+			 */	
           }
           | ID {
-			$$ = newTreeNode(name_list);
+			$$ = newTreeNode(N_NAME_LIST);
 		 	appendChild($$, $1);		
 		  }
           ;
 
 var_part : VAR var_decl_list {
-			$$ = newTreeNode(var_part);
-		 	appendChild($$, $1);	
-			appendChild($$, $2);		
+			$$ = $2;
 		 } 
          | {
-			$$ = newTreeNode(var_part);
+			$$ = newTreeNode(N_VAR_PART); //empty var part
 		 };
 
 var_decl_list : var_decl_list var_decl {
-				  $$ = newTreeNode(var_decl_list);
-		 	      appendChild($$, $1);	
+				  $$ = $1;
 				  appendChild($$, $2);	
+			/*          	N_VAR_PART 
+			 *			/		       |	        |   	\
+			 *			N_VAR_DECL   N_VAR_DECL  ......  N_VAR_DECL					
+			 */	
 			  }
               | var_decl {
-					$$ = newTreeNode(var_decl_list);
+					$$ = newTreeNode(N_VAR_PART);
 		 			appendChild($$, $1);
 			  }
               ;
 var_decl : name_list COLON type_decl SEMI {
-		 	$$ = newTreeNode(var_decl);
+		 	$$ = newTreeNode(N_VAR_DECL);
 		 	appendChild($$, $1);	
-			appendChild($$, $2);	
-			appendChild($$, $3);	
-			appendChild($$, $4);
+			appendChild($$, $3);
+			/*          	N_VAR_DECL 
+			 *			/	     		\
+			 *			N_NAME_LIST   	(N_SIMPLE_TYPE_DECL|N_ARRAY_TYPE_DECL|N_RECORD_TYPE_DECL)					
+			 */	
 		 }
          ;
 
 routine_part : routine_part function_decl {
-			 		$$ = newTreeNode(routine_part);
-		 			appendChild($$, $1);	
+			 		$$ = $1;
 					appendChild($$, $2);
+			/*          											N_ROUTINE_PART 
+			 *			/	     								|								|			\
+			 *			(N_FUNCTION_DECL|N_PROCEDURE_DECL)  (N_FUNCTION_DECL|N_PROCEDURE_DECL) .... (N_FUNCTION_DECL|N_PROCEDURE_DECL)					
+			 */	
 				}
              | routine_part procedure_decl {
-			 		$$ = newTreeNode(routine_part);
-		 			appendChild($$, $1);	
+			 		$$ = $1;	
 					appendChild($$, $2);
 			 }
              | function_decl {
-			 		$$ = newTreeNode(routine_part);
+			 		$$ = newTreeNode(N_ROUTINE_PART);
 		 			appendChild($$, $1);	
 			 }
              | procedure_decl {
-			 		$$ = newTreeNode(routine_part);
+			 		$$ = newTreeNode(N_ROUTINE_PART);
 		 			appendChild($$, $1);	
 			 }  
              | {
-			 		$$ = newTreeNode(routine_part);
+			 		$$ = newTreeNode(N_ROUTINE_PART); //EMPTY ROUTINE PART
 		     }
              ;
 
 function_decl : function_head SEMI sub_routine SEMI {
-			  		$$ = newTreeNode(function_decl);
+			  		$$ = newTreeNode(N_FUNCTION_DECL);
 		 			appendChild($$, $1);
-					appendChild($$, $2);	
-					appendChild($$, $3);	
-					appendChild($$, $4);		
+					appendChild($$, $3);		
+			/*          N_FUNCTION_DECL 
+			 *			/	     		\
+			 *		N_FUNCTION_HEAD 	N_ROUTINE 				
+			 */	
 			  }
               ;
 
 function_head : FUNCTION ID parameters COLON simple_type_decl {
-			  		$$ = newTreeNode(function_head);
-		 			appendChild($$, $1);
+			  		$$ = newTreeNode(N_FUNCTION_HEAD);
 					appendChild($$, $2);	
 					appendChild($$, $3);	
-					appendChild($$, $4);	
 					appendChild($$, $5);	
+			/*          N_FUNCTION_HEAD 
+			 *			/	   |  				\
+			 *		  N_ID	 N_PARAMETERS	N_SIMPLE_TYPE_DECL 				
+			 */	
 			  }
               ;
  
 procedure_decl : procedure_head SEMI sub_routine SEMI {
-			   		$$ = newTreeNode(procedure_decl);
-		 			appendChild($$, $1);
-					appendChild($$, $2);	
+			   		$$ = newTreeNode(N_PROCEDURE_DECL);
+		 			appendChild($$, $1);	
 					appendChild($$, $3);	
-					appendChild($$, $4);	
+			/*         N_PROCEDURE_DECL 
+			 *			/	     		\
+			 *		N_PROCEDURE_HEAD	N_ROUTINE 				
+			 */	
 			   }
                ;
 
 procedure_head : PROCEDURE ID parameters {
-					$$ = newTreeNode(procedure_head);
+					$$ = newTreeNode(N_PROCEDURE_HEAD);
 		 			appendChild($$, $1);
 					appendChild($$, $2);	
 					appendChild($$, $3);	
+			/*          N_PROCEDURE_HEAD 
+			 *			/	   \  				
+			 *		  N_ID	 N_PARAMETERS					
+			 */	
 			   }
                ;
  
 parameters : LP para_decl_list RP {
-				$$ = newTreeNode(parameters);
-	 			appendChild($$, $1);
-				appendChild($$, $2);	
-				appendChild($$, $3);	
+				$$ = $2;
 		   }
            | {
-				$$ = newTreeNode(parameters);
+				$$ = newTreeNode(N_PARAMETERS);
+			/*          				N_PARAMETERS
+			 *			/	     		|	    	|			\
+			 *			N_PARA_TYPE  N_PARA_TYPE ....    N_PARA_TYPE					
+			 */	
 		   }
            ;
 
 para_decl_list : para_decl_list SEMI para_type_list {
-					$$ = newTreeNode(para_decl_list);
-		 			appendChild($$, $1);
-					appendChild($$, $2);	
+					$$ = $1;	
 					appendChild($$, $3);	
 			   } 
                | para_type_list {
-					$$ = newTreeNode(para_decl_list);
+					$$ = newTreeNode(N_PARAMETERS);
 		 			appendChild($$, $1);
 			   }
                ;
 
 para_type_list : var_para_list COLON simple_type_decl {
-					$$ = newTreeNode(para_type_list);
+					$$ = newTreeNode(N_PARA_TYPE);
 		 			appendChild($$, $1);
-					appendChild($$, $2);	
-					appendChild($$, $3);				
+					appendChild($$, $3);		
+			/*          	N_PARA_TYPE
+			 *			/	     		\
+			 *			N_NAME_LIST   N_SIMPLE_TYPE_DECL				
+			 */			
 			   }
 			   | val_para_list COLON simple_type_decl {
-					$$ = newTreeNode(para_type_list);
-		 			appendChild($$, $1);
-					appendChild($$, $2);	
+					$$ = newTreeNode(N_PARA_TYPE);
+		 			appendChild($$, $1);	
 					appendChild($$, $3);				
 			   }
                ;
 
 var_para_list : VAR name_list {
-					$$ = newTreeNode(var_para_list);
-		 			appendChild($$, $1);
-					appendChild($$, $2);	
+					$$ = $2;	
    			  }
               ;
 
 val_para_list : name_list {
-					$$ = newTreeNode(val_para_list);
-		 			appendChild($$, $1);
+					$$ = $1;
 			  }
               ;
 
 routine_body : compound_stmt {
-					$$ = newTreeNode(routine_body);
-		 			appendChild($$, $1);   		
+					$$ = $1;   		
 			 }
              ;
 
 compound_stmt : BEGINN stmt_list END {
-					$$ = newTreeNode(compound_stmt);
-		 			appendChild($$, $1);
-					appendChild($$, $2);	
-					appendChild($$, $3);
-			  }
+					$$ = $2;
+			  } 
               ;
 
 stmt_list : stmt_list  stmt  SEMI {
-			$$ = newTreeNode(stmt_list);
- 			appendChild($$, $1);
-			appendChild($$, $2);	
-			appendChild($$, $3);
+			$$ = $1;
+			appendChild($$, $2);
+			/*          				N_STMT_LIST
+			 *			/	     		|	    	|			\
+			 *			N_STMT          N_STMT     ....        N_STMT					
+			 */	
 		  }
           | {
-			$$ = newTreeNode(stmt_list);
+			$$ = newTreeNode(N_STMT_LIST);  
 		  }
-          ;
+		  | stmt_list stmt error{
+		  	printError("expected an ';' after an statement");
+		  };
 
 stmt : INTEGER COLON non_label_stmt {
-		$$ = newTreeNode(stmt);
-		appendChild($$, $1);
-		appendChild($$, $2);	
+		$$ = newTreeNode(N_STMT);
+		appendChild($$, $1);	
 		appendChild($$, $3);
+			/*          	N_STMT
+			 *			/			\
+			 *		N_INTEGER     (N_ASSIGN_STMT|N_PROC_STMT|N_COMPOUND_STMT|N_IF_STMT|N_REPEAT_STMT|N_WHILE_STMT|N_FOR_STMT|N_CASE_STMT|N_GOTO_STMT)   					
+			 */	
      }
      | non_label_stmt {
-		$$ = newTreeNode(stmt);
+		$$ = newTreeNode(N_STMT);
 		appendChild($$, $1);
+
+			/*          	N_STMT
+			 *				 |
+			 *		(N_ASSIGN_STMT|N_PROC_STMT|N_COMPOUND_STMT|N_IF_STMT|N_REPEAT_STMT|N_WHILE_STMT|N_FOR_STMT|N_CASE_STMT|N_GOTO_STMT)   					
+			 */	
      }
 	 ;
 
 non_label_stmt : assign_stmt {
-					$$ = newTreeNode(non_label_stmt);
-					appendChild($$, $1);
+					$$ = $1;
 			   }
                | proc_stmt {
-					$$ = newTreeNode(non_label_stmt);
-					appendChild($$, $1);
+					$$ = $1;
 			   }
                | compound_stmt {
-					$$ = newTreeNode(non_label_stmt);
-					appendChild($$, $1);
+					$$ = $1;
 			   }
                | if_stmt {
-					$$ = newTreeNode(non_label_stmt);
-					appendChild($$, $1);
+					$$ = $1;
 			   }
                | repeat_stmt {
-					$$ = newTreeNode(non_label_stmt);
-					appendChild($$, $1);
+					$$ = $1;
 			   }
                | while_stmt {
-					$$ = newTreeNode(non_label_stmt);
-					appendChild($$, $1);
+					$$ = $1;
 			   }
                | for_stmt {
-					$$ = newTreeNode(non_label_stmt);
-					appendChild($$, $1);
+					$$ = $1;
    			   }
                | case_stmt {
-					$$ = newTreeNode(non_label_stmt);
-					appendChild($$, $1);
+					$$ = $1;
 			   }
                | goto_stmt {
-					$$ = newTreeNode(non_label_stmt);
-					appendChild($$, $1);
+					$$ = $1;
+			   }
+			   | error{
+			   	 printError("illegal statement");
 			   }
                ;
 
 assign_stmt : ID ASSIGN expression {
-					$$ = newTreeNode(assign_stmt);
+					$$ = newTreeNode(N_ASSIGN_STMT);
 					appendChild($$, $1);
-					appendChild($$, $2);
-					appendChild($$, $3);
+					TreeNode* exp = newTreeNode(N_EXPRESSION);
+					appendChild(exp, $3);
+					appendChild($$, exp);
+			/*          	N_ASSIGN_STMT
+			 *			/			  \
+			 *		N_ID         N_EXPRESSION   					
+			 */	
 			}
             | ID LB expression RB ASSIGN expression {
-					$$ = newTreeNode(assign_stmt);
+					$$ = newTreeNode(N_ASSIGN_STMT);
 					appendChild($$, $1);
-					appendChild($$, $2);
-					appendChild($$, $3);
-					appendChild($$, $4);
-					appendChild($$, $5);
-					appendChild($$, $6);
+					TreeNode* exp1 = newTreeNode(N_EXPRESSION);
+					appendChild(exp1, $3);
+					TreeNode* exp2 = newTreeNode(N_EXPRESSION);
+					appendChild(exp2, $6);
+					appendChild($$, exp1);
+					appendChild($$, exp2);
+			/*          	N_ASSIGN_STMT
+			 *			/		|			  \
+			 *		N_ID   N_EXPRESSION       N_EXPRESSION   					
+			 */	
 			}
             | ID DOT ID ASSIGN expression {
-					$$ = newTreeNode(assign_stmt);
+					$$ = newTreeNode(N_ASSIGN_STMT);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
-					appendChild($$, $4);
-					appendChild($$, $5);
-			}
-            ;
+					TreeNode* exp = newTreeNode(N_EXPRESSION);
+					appendChild(exp, $5);
+					appendChild($$, exp);
+			/*          	N_ASSIGN_STMT
+			 *			/		|			  \
+			 *		N_ID   		N_ID       N_EXPRESSION   					
+			 */	
+			};
 
 proc_stmt : ID {
-				$$ = newTreeNode(proc_stmt);
+				$$ = newTreeNode(N_PROC_STMT);
 				appendChild($$, $1);
+			/*          	N_PROC_STMT
+			 *					|			  
+			 *		       		N_ID        					
+			 */	
 		  }
           | ID LP args_list RP {
-				$$ = newTreeNode(proc_stmt);
+				$$ = newTreeNode(N_PROC_STMT);
 				appendChild($$, $1);
-				appendChild($$, $2);
 				appendChild($$, $3);
-				appendChild($$, $4);
+			/*         N_PROC_STMT
+			 *			/		 \
+			 *		N_ID   		N_ARGS_LIST          					
+			 */	
 		  }
           | SYS_PROC {
-				$$ = newTreeNode(proc_stmt);
+				$$ = newTreeNode(N_PROC_STMT);
 				appendChild($$, $1);
+			/*          	N_PROC_STMT
+			 *					|			  
+			 *		       		N_SYS_PROC        					
+			 */	
 		  }
           | SYS_PROC LP expression_list RP {
-				$$ = newTreeNode(proc_stmt);
+				$$ = newTreeNode(N_PROC_STMT);
 				appendChild($$, $1);
-				appendChild($$, $2);
 				appendChild($$, $3);
-				appendChild($$, $4);
+			/*         N_PROC_STMT
+			 *			/		 \
+			 *		N_SYS_PROC   N_EXPRESSION_LIST          					
+			 */	
 		  }
           | READ LP factor RP {
-				$$ = newTreeNode(proc_stmt);
+				$$ = newTreeNode(N_PROC_STMT);
 				appendChild($$, $1);
-				appendChild($$, $2);
 				appendChild($$, $3);
-				appendChild($$, $4);
+			/*          N_PROC_STMT
+			 *				|	 
+			 *			 N_FACTOR            					
+			 */	
 		  }
           ;
 
 if_stmt : IF expression THEN stmt else_clause {
-				$$ = newTreeNode(if_stmt);
-				appendChild($$, $1);
-				appendChild($$, $2);
-				appendChild($$, $3);
+				$$ = newTreeNode(N_IF_STMT);
+				TreeNode* exp = newTreeNode(N_EXPRESSION);
+				appendChild(exp, $2);				
+				appendChild($$, exp);
 				appendChild($$, $4);
 				appendChild($$, $5);
+
+			/*          	N_IF_STMT
+			 *		/			|		 \ 
+			 *	  N_EXPRESSION  N_STMT  N_STMT        					
+			 */	
 		}
         ;
 
 else_clause : ELSE stmt {
-				$$ = newTreeNode(else_clause);
-				appendChild($$, $1);
-				appendChild($$, $2);
+				$$ = $2;
 			}
             | {
-				$$ = newTreeNode(else_clause);
+				$$ = newTreeNode(N_STMT); //an stmt with empty child
 			}
             ;
 
 repeat_stmt : REPEAT stmt_list UNTIL expression {
-				$$ = newTreeNode(repeat_stmt);
-				appendChild($$, $1);
+				$$ = newTreeNode(N_REPEAT_STMT);
 				appendChild($$, $2);
-				appendChild($$, $3);
-				appendChild($$, $4);
+				TreeNode* exp = newTreeNode(N_EXPRESSION);
+				appendChild(exp, $4);
+				appendChild($$, exp);
+			/*          	N_REPEAT_STMT
+			 *		/					 \ 
+			 *	  N_STMT_LIST    		N_EXPRESSION        					
+			 */	
 			}
             ;
 
 while_stmt : WHILE expression DO stmt {
-				$$ = newTreeNode(while_stmt);
-				appendChild($$, $1);
-				appendChild($$, $2);
-				appendChild($$, $3);
+				$$ = newTreeNode(N_WHILE_STMT);
+				TreeNode* exp = newTreeNode(N_EXPRESSION);
+				appendChild(exp, $2);
+				appendChild($$, exp);
 				appendChild($$, $4);
+			
+			/*          	N_WHILE_STMT
+			 *				/			 \ 
+			 *	  N_EXPRESSION    		N_STMT        					
+			 */	
 		   }
            ;
 
 for_stmt : FOR ID ASSIGN expression direction expression DO stmt {
-				$$ = newTreeNode(for_stmt);
-				appendChild($$, $1);
+				$$ = newTreeNode(N_FOR_STMT);
 				appendChild($$, $2);
-				appendChild($$, $3);
-				appendChild($$, $4);
+				TreeNode* exp1 = newTreeNode(N_EXPRESSION);
+				appendChild(exp1, $4);
+				appendChild($$, exp1);
 				appendChild($$, $5);
-				appendChild($$, $6);
-				appendChild($$, $7);
+				TreeNode* exp2 = newTreeNode(N_EXPRESSION);
+				appendChild(exp2, $6);
+				appendChild($$, exp2);
 				appendChild($$, $8);
-		 }
+			/*          	N_FOR_STMT
+			 *		/		|           |               |       	 \ 
+			 *	  N_ID  N_EXPRESSION (N_TO|N_DOWNTO) N_EXPRESSION N_STMT        					
+			 */	
+		 } 
          ;
 
 direction : TO {
-			$$ = newTreeNode(direction);
-			appendChild($$, $1);
+			$$ = $1;
 		  }
           | DOWNTO {
-			$$ = newTreeNode(direction);
-			appendChild($$, $1);
+			$$ = $1;
 		  }
           ;
 
 case_stmt : CASE expression OF case_expr_list END {
-			$$ = newTreeNode(case_stmt);
-			appendChild($$, $1);
-			appendChild($$, $2);
-			appendChild($$, $3);
+			$$ = newTreeNode(N_CASE_STMT);
+			TreeNode* exp = newTreeNode(N_EXPRESSION);
+			appendChild(exp, $2);
+			appendChild($$, exp);
 			appendChild($$, $4);
-			appendChild($$, $5);
+			/*       N_CASE_STMT
+			 *		/      	 \ 
+			 * N_EXPRESSION N_CASE_EXPR_LIST        					
+			 */
 		  }
           ;
 
 case_expr_list : case_expr_list case_expr {
-					$$ = newTreeNode(case_expr_list);
-					appendChild($$, $1);
+					$$ = $1;
 					appendChild($$, $2);
+			/*       N_CASE_EXPR_LIST
+			 *		/      	 |           |   \ 
+			 * N_CASE_EXPR N_CASE_EXPR ... N_CASE_EXPR        					
+			 */
+
 			   }
                | case_expr {
-					$$ = newTreeNode(case_expr_list);
+					$$ = newTreeNode(N_CASE_EXPR_LIST);
 					appendChild($$, $1);
 			   }
                ;
 case_expr : const_value COLON stmt SEMI {
-			$$ = newTreeNode(case_expr);
+			$$ = newTreeNode(N_CASE_EXPR);
 			appendChild($$, $1);
-			appendChild($$, $2);
 			appendChild($$, $3);
-			appendChild($$, $4);
+			/*      								 N_CASE_STMT
+			 *										/      	     \ 
+			 * 	  (N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)   N_STMT        					
+			 */
 		  }
           | ID COLON stmt SEMI {
-			$$ = newTreeNode(case_expr);
+			$$ = newTreeNode(N_CASE_EXPR);
 			appendChild($$, $1);
-			appendChild($$, $2);
 			appendChild($$, $3);
-			appendChild($$, $4);
+
+			/*      N_CASE_STMT
+			 *		/	     \ 
+			 * 	  N_ID   N_STMT        					
+			 */
 		  }
           ;
 
 goto_stmt : GOTO INTEGER {
-			$$ = newTreeNode(goto_stmt);
+			$$ = newTreeNode(N_GOTO_STMT);
 			appendChild($$, $1);
-			appendChild($$, $2);
+			
+			/*      N_GOTO_STMT
+			 *		   |
+			 * 	     N_INTEGER        					
+			 */
 		  }
           ;
 
 expression_list : expression_list COMMA expression {
-					$$ = newTreeNode(expression_list);
-					appendChild($$, $1);
-					appendChild($$, $2);
-					appendChild($$, $3);
+					$$ = $1;
+
+					TreeNode* exp = newTreeNode(N_EXPRESSION);
+					appendChild(exp, $3);
+					appendChild($$, exp);
 			    }
                 | expression {
-					$$ = newTreeNode(expression_list);
-					appendChild($$, $1);
+					$$ = newTreeNode(N_EXPRESSION_LIST);
+					TreeNode* exp = newTreeNode(N_EXPRESSION);
+					appendChild(exp, $1);
+					appendChild($$, exp);
+			/*       N_EXPRESSION_LIST
+			 *		/      	 |           |   \ 
+			 * N_EXPRESSION N_EXPRESSION ... N_EXPRESSION        					
+			 */
 				}
                 ;
 
 expression : expression GE expr {
-					$$ = newTreeNode(expression);
+					$$ = newTreeNode(N_EXP_GE);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
 		   }
            | expression GT expr {
-					$$ = newTreeNode(expression);
+					$$ = newTreeNode(N_EXP_GT);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
 		   }
            | expression LE expr {
-					$$ = newTreeNode(expression);
+					$$ = newTreeNode(N_EXP_LE);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
 		   }
            | expression LT expr {
-					$$ = newTreeNode(expression);
+					$$ = newTreeNode(N_EXP_LT);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
 		   }
            | expression EQUAL expr {
-					$$ = newTreeNode(expression);
+					$$ = newTreeNode(N_EXP_EQUAL);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
 		   }  
            | expression UNEQUAL expr {
-					$$ = newTreeNode(expression);
+					$$ = newTreeNode(N_EXP_UNEQUAL);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
 		   }
            | expr {
-					$$ = newTreeNode(expression);
-					appendChild($$, $1);
+					$$ = $1;
 		   }
            ;
 
 expr : expr PLUS term {
-					$$ = newTreeNode(expr);
+					$$ = newTreeNode(N_EXP_PLUS);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
      }
      | expr MINUS term {
-					$$ = newTreeNode(expr);
+					$$ = newTreeNode(N_EXP_MINUS);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
 	 }
      | expr OR term {
-					$$ = newTreeNode(expr);
+					$$ = newTreeNode(N_EXP_OR);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
 	 }
      | term {
-					$$ = newTreeNode(expr);
-					appendChild($$, $1);
+					$$ = $1;
 	 }
      ;
 
 term : term MUL factor {
-					$$ = newTreeNode(term);
+					$$ = newTreeNode(N_EXP_MUL);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
 	 }
      | term DIV factor {
-					$$ = newTreeNode(term);
+					$$ = newTreeNode(N_EXP_DIV);
 					appendChild($$, $1);
 					appendChild($$, $2);
 					appendChild($$, $3);
 	 }
      | term MOD factor {
-					$$ = newTreeNode(term);
+					$$ = newTreeNode(N_EXP_MOD);
 					appendChild($$, $1);
 					appendChild($$, $2);
 					appendChild($$, $3);
 	 }
      | term AND factor {
-					$$ = newTreeNode(term);
+					$$ = newTreeNode(N_EXP_AND);
 					appendChild($$, $1);
 					appendChild($$, $2);
 					appendChild($$, $3);
 	 }
      | factor {
-					$$ = newTreeNode(term);
-					appendChild($$, $1);
+					$$ = $1;
 	 }
      ;
 
 factor : ID {
-					$$ = newTreeNode(factor);
+					$$ = newTreeNode(N_FACTOR);
 					appendChild($$, $1);
+			/*      N_FACTOR
+			 *		   |
+			 * 	     N_ID        					
+			 */
 	   }
        | ID LP args_list RP {
-					$$ = newTreeNode(factor);
+					$$ = newTreeNode(N_FACTOR);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
-				    appendChild($$, $4);
+			/*      N_FACTOR
+			 *		/		\
+			 * 	   N_ID      N_ARGS_LIST  					
+			 */
 	   }
        | SYS_FUNCT {
-					$$ = newTreeNode(factor);
+					$$ = newTreeNode(N_FACTOR);
 					appendChild($$, $1);
+			/*      N_FACTOR
+			 *			|
+			 * 	   N_SYS_FUNCT   					
+			 */
        }
        | SYS_FUNCT LP args_list RP {
-					$$ = newTreeNode(factor);
+					$$ = newTreeNode(N_FACTOR);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
-					appendChild($$, $4);
+			/*      		N_FACTOR
+			 *			/			\
+			 * 	   N_SYS_FUNCT   	N_ARGS_LIST				
+			 */
 	   }
        | const_value {
-					$$ = newTreeNode(factor);
+					$$ = newTreeNode(N_FACTOR);
 					appendChild($$, $1);
+			/*      		N_FACTOR
+			 *					|	
+			 * 	   		(N_INTEGER|N_REAL|N_CHAR|N_STRING|N_SYS_CON)				
+			 */
 	   }
        | LP expression RP {
-					$$ = newTreeNode(factor);
-					appendChild($$, $1);
-					appendChild($$, $2);
-					appendChild($$, $3);
+					$$ = newTreeNode(N_FACTOR);
+					TreeNode* exp = newTreeNode(N_EXPRESSION);
+					appendChild(exp, $2);
+					appendChild($$, exp);
+			/*      N_FACTOR
+			 *			|
+			 * 	   	N_EXPRESSION			
+			 */
 	   }
        | NOT factor {
-					$$ = newTreeNode(factor);
+					$$ = newTreeNode(N_FACTOR);
 					appendChild($$, $1);
 					appendChild($$, $2);
+			/*      N_FACTOR
+			 *		/		\
+			 * N_NOT		N_FACTOR			
+			 */
 	   }
        | MINUS factor {
-					$$ = newTreeNode(factor);
+					$$ = newTreeNode(N_FACTOR);
 					appendChild($$, $1);
 					appendChild($$, $2);
+			/*      N_FACTOR
+			 *		/		\
+			 * N_MINUS		N_FACTOR			
+			 */
 	   }
        | ID LB expression RB {
-					$$ = newTreeNode(factor);
+					$$ = newTreeNode(N_FACTOR);
 					appendChild($$, $1);
-					appendChild($$, $2);
-					appendChild($$, $3);
-					appendChild($$, $4);
+					TreeNode* exp = newTreeNode(N_EXPRESSION);
+					appendChild(exp, $3);
+					appendChild($$, exp);
+				
+			/*      N_FACTOR
+			 *		/		\
+			 * N_ID			N_EXPRESSION			
+			 */
 	   }
        | ID DOT ID {
-					$$ = newTreeNode(factor);
+					$$ = newTreeNode(N_FACTOR);
 					appendChild($$, $1);
-					appendChild($$, $2);
 					appendChild($$, $3);
+			/*      N_FACTOR
+			 *		/		\
+			 * N_ID			N_ID			
+			 */
 	   }
        ;
 
 args_list : args_list COMMA expression {
-					$$ = newTreeNode(args_list);
-					appendChild($$, $1);
-					appendChild($$, $2);
-					appendChild($$, $3);
+					$$ = $1;
+					$$ = newTreeNode(N_ARGS_LIST);
+					TreeNode* exp = newTreeNode(N_EXPRESSION);
+					appendChild(exp, $3);
+					appendChild($$, exp);
 		  } 
           | expression {
-					$$ = newTreeNode(args_list);
-					appendChild($$, $1);
+					$$ = newTreeNode(N_ARGS_LIST);
+					TreeNode* exp = newTreeNode(N_EXPRESSION);
+					appendChild(exp, $1);
+					appendChild($$, exp);
 		  }
           ;
 
 %%
 int yyerror(char *a){
-	fprintf(stderr, "line %d: error in '%s'\n", lineno, a);
 	hasError = 1;
 	return 0;
+}
+
+
+int printError(char *a){
+	fprintf(stderr, "line %d: %s\n", lineno, a);
 }
 

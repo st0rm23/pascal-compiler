@@ -892,289 +892,289 @@ do_action:	/* This label is used only to access EOF actions. */
 case 1:
 YY_RULE_SETUP
 #line 67 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_AND, yytext); return (AND);}
+{yylval = newTokenTreeNode(N_AND, yytext); return (AND);}
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
 #line 68 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_ARRAY, yytext);return (ARRAY);}
+{yylval = newTokenTreeNode(N_ARRAY, yytext);return (ARRAY);}
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
 #line 69 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_ASSIGN, yytext);return (ASSIGN);}
+{yylval = newTokenTreeNode(N_ASSIGN, yytext);return (ASSIGN);}
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
 #line 70 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_BEGIN, yytext);return (BEGINN);}
+{yylval = newTokenTreeNode(N_BEGIN, yytext);return (BEGINN);}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
 #line 71 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_CASE, yytext);return (CASE);}
+{yylval = newTokenTreeNode(N_CASE, yytext);return (CASE);}
 	YY_BREAK
 case 6:
 /* rule 6 can match eol */
 YY_RULE_SETUP
 #line 72 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_CHAR, yytext);return (CHAR);}
+{yylval = newTokenTreeNode(N_CHAR, yytext);return (CHAR);}
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
 #line 73 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_COLON, yytext);return (COLON);}
+{yylval = newTokenTreeNode(N_COLON, yytext);return (COLON);}
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
 #line 74 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_COMMA, yytext);return (COMMA);}
+{yylval = newTokenTreeNode(N_COMMA, yytext);return (COMMA);}
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
 #line 75 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_CONST, yytext);return (CONST);}
+{yylval = newTokenTreeNode(N_CONST, yytext);return (CONST);}
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
 #line 76 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_DIV, yytext);return (DIV);}
+{yylval = newTokenTreeNode(N_DIV, yytext);return (DIV);}
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
 #line 77 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_DO, yytext);return (DO);}
+{yylval = newTokenTreeNode(N_DO, yytext);return (DO);}
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
 #line 78 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_DOT, yytext);return (DOT);}
+{yylval = newTokenTreeNode(N_DOT, yytext);return (DOT);}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 79 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_DOTDOT, yytext);return (DOTDOT);}
+{yylval = newTokenTreeNode(N_DOTDOT, yytext);return (DOTDOT);}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 80 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_DOWNTO, yytext);return (DOWNTO);}
+{yylval = newTokenTreeNode(N_DOWNTO, yytext);return (DOWNTO);}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 81 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_ELSE, yytext);return (ELSE);}
+{yylval = newTokenTreeNode(N_ELSE, yytext);return (ELSE);}
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
 #line 82 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_END, yytext);return (END);}
+{yylval = newTokenTreeNode(N_END, yytext);return (END);}
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
 #line 83 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_EQUAL, yytext);return (EQUAL);}
+{yylval = newTokenTreeNode(N_EQUAL, yytext);return (EQUAL);}
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
 #line 84 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_FOR, yytext);return (FOR);}
+{yylval = newTokenTreeNode(N_FOR, yytext);return (FOR);}
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
 #line 85 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_FUNCTION, yytext);return (FUNCTION);}
+{yylval = newTokenTreeNode(N_FUNCTION, yytext);return (FUNCTION);}
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
 #line 86 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_GE, yytext);return (GE);}
+{yylval = newTokenTreeNode(N_GE, yytext);return (GE);}
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 87 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_GOTO, yytext);return (GOTO);}
+{yylval = newTokenTreeNode(N_GOTO, yytext);return (GOTO);}
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 88 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_GT, yytext);return (GT);}
+{yylval = newTokenTreeNode(N_GT, yytext);return (GT);}
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 89 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_IF, yytext);return (IF);}
+{yylval = newTokenTreeNode(N_IF, yytext);return (IF);}
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
 #line 90 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_INTEGER, yytext);return (INTEGER);}
+{yylval = newTokenTreeNode(N_INTEGER, yytext);return (INTEGER);}
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
 #line 91 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_LB, yytext);return (LB);}
+{yylval = newTokenTreeNode(N_LB, yytext);return (LB);}
 	YY_BREAK
 case 26:
 YY_RULE_SETUP
 #line 92 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_LE, yytext);return (LE);}
+{yylval = newTokenTreeNode(N_LE, yytext);return (LE);}
 	YY_BREAK
 case 27:
 YY_RULE_SETUP
 #line 93 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_LP, yytext);return (LP);}
+{yylval = newTokenTreeNode(N_LP, yytext);return (LP);}
 	YY_BREAK
 case 28:
 YY_RULE_SETUP
 #line 94 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_LT, yytext);return (LT);}
+{yylval = newTokenTreeNode(N_LT, yytext);return (LT);}
 	YY_BREAK
 case 29:
 YY_RULE_SETUP
 #line 95 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_MINUS, yytext);return (MINUS);}
+{yylval = newTokenTreeNode(N_MINUS, yytext);return (MINUS);}
 	YY_BREAK
 case 30:
 YY_RULE_SETUP
 #line 96 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_MOD, yytext);return (MOD);}
+{yylval = newTokenTreeNode(N_MOD, yytext);return (MOD);}
 	YY_BREAK
 case 31:
 YY_RULE_SETUP
 #line 97 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_MUL, yytext);return (MUL);}
+{yylval = newTokenTreeNode(N_MUL, yytext);return (MUL);}
 	YY_BREAK
 case 32:
 YY_RULE_SETUP
 #line 98 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_NOT, yytext);return (NOT);}
+{yylval = newTokenTreeNode(N_NOT, yytext);return (NOT);}
 	YY_BREAK
 case 33:
 YY_RULE_SETUP
 #line 99 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_OF, yytext);return (OF);}
+{yylval = newTokenTreeNode(N_OF, yytext);return (OF);}
 	YY_BREAK
 case 34:
 YY_RULE_SETUP
 #line 100 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_OR, yytext);return (OR);}
+{yylval = newTokenTreeNode(N_OR, yytext);return (OR);}
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
 #line 101 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_PLUS, yytext);return (PLUS);}
+{yylval = newTokenTreeNode(N_PLUS, yytext);return (PLUS);}
 	YY_BREAK
 case 36:
 YY_RULE_SETUP
 #line 102 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_PROCEDURE, yytext);return (PROCEDURE);}
+{yylval = newTokenTreeNode(N_PROCEDURE, yytext);return (PROCEDURE);}
 	YY_BREAK
 case 37:
 YY_RULE_SETUP
 #line 103 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_PROGRAM, yytext);return (PROGRAM);}
+{yylval = newTokenTreeNode(N_PROGRAM, yytext);return (PROGRAM);}
 	YY_BREAK
 case 38:
 YY_RULE_SETUP
 #line 104 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_RB, yytext);return (RB);}
+{yylval = newTokenTreeNode(N_RB, yytext);return (RB);}
 	YY_BREAK
 case 39:
 YY_RULE_SETUP
 #line 105 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_READ, yytext);return (READ);}
+{yylval = newTokenTreeNode(N_READ, yytext);return (READ);}
 	YY_BREAK
 case 40:
 YY_RULE_SETUP
 #line 106 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_REAL, yytext);return (REAL);}
+{yylval = newTokenTreeNode(N_REAL, yytext);return (REAL);}
 	YY_BREAK
 case 41:
 YY_RULE_SETUP
 #line 107 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_RECORD, yytext);return (RECORD);}
+{yylval = newTokenTreeNode(N_RECORD, yytext);return (RECORD);}
 	YY_BREAK
 case 42:
 YY_RULE_SETUP
 #line 108 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_REPEAT, yytext);return (REPEAT);}
+{yylval = newTokenTreeNode(N_REPEAT, yytext);return (REPEAT);}
 	YY_BREAK
 case 43:
 YY_RULE_SETUP
 #line 109 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_RP, yytext);return (RP);}
+{yylval = newTokenTreeNode(N_RP, yytext);return (RP);}
 	YY_BREAK
 case 44:
 YY_RULE_SETUP
 #line 110 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_SEMI, yytext);return (SEMI);}
+{yylval = newTokenTreeNode(N_SEMI, yytext);return (SEMI);}
 	YY_BREAK
 case 45:
 /* rule 45 can match eol */
 YY_RULE_SETUP
 #line 111 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_STRING, yytext);return (STRING);}
+{yylval = newTokenTreeNode(N_STRING, yytext);return (STRING);}
 	YY_BREAK
 case 46:
 YY_RULE_SETUP
 #line 112 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_SYS_CON, yytext);return (SYS_CON);}
+{yylval = newTokenTreeNode(N_SYS_CON, yytext);return (SYS_CON);}
 	YY_BREAK
 case 47:
 YY_RULE_SETUP
 #line 113 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_SYS_FUNCT, yytext);return (SYS_FUNCT);}
+{yylval = newTokenTreeNode(N_SYS_FUNCT, yytext);return (SYS_FUNCT);}
 	YY_BREAK
 case 48:
 YY_RULE_SETUP
 #line 114 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_SYS_PROC, yytext);return (SYS_PROC);}
+{yylval = newTokenTreeNode(N_SYS_PROC, yytext);return (SYS_PROC);}
 	YY_BREAK
 case 49:
 YY_RULE_SETUP
 #line 115 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_SYS_TYPE, yytext);return (SYS_TYPE);}
+{yylval = newTokenTreeNode(N_SYS_TYPE, yytext);return (SYS_TYPE);}
 	YY_BREAK
 case 50:
 YY_RULE_SETUP
 #line 116 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_THEN, yytext);return (THEN);}
+{yylval = newTokenTreeNode(N_THEN, yytext);return (THEN);}
 	YY_BREAK
 case 51:
 YY_RULE_SETUP
 #line 117 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_TO, yytext);return (TO);}
+{yylval = newTokenTreeNode(N_TO, yytext);return (TO);}
 	YY_BREAK
 case 52:
 YY_RULE_SETUP
 #line 118 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_TYPE, yytext);return (TYPE);}
+{yylval = newTokenTreeNode(N_TYPE, yytext);return (TYPE);}
 	YY_BREAK
 case 53:
 YY_RULE_SETUP
 #line 119 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_UNEQUAL, yytext);return (UNEQUAL);}
+{yylval = newTokenTreeNode(N_UNEQUAL, yytext);return (UNEQUAL);}
 	YY_BREAK
 case 54:
 YY_RULE_SETUP
 #line 120 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_UNTIL, yytext);return (UNTIL);}
+{yylval = newTokenTreeNode(N_UNTIL, yytext);return (UNTIL);}
 	YY_BREAK
 case 55:
 YY_RULE_SETUP
 #line 121 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_VAR, yytext);return (VAR);}
+{yylval = newTokenTreeNode(N_VAR, yytext);return (VAR);}
 	YY_BREAK
 case 56:
 YY_RULE_SETUP
 #line 122 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_WHILE, yytext);return (WHILE);}
+{yylval = newTokenTreeNode(N_WHILE, yytext);return (WHILE);}
 	YY_BREAK
 case 57:
 YY_RULE_SETUP
 #line 123 "pascal.l"
-{yylval = newTokenTreeNode(TOKEN_ID, yytext);return (ID);}
+{yylval = newTokenTreeNode(N_ID, yytext);return (ID);}
 	YY_BREAK
 case 58:
 YY_RULE_SETUP
